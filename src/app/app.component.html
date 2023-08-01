@@ -1,166 +1,32 @@
-<div class="container mt-5">
-  <h1 class="text-center">Template Driven Form</h1>
-  <div class="form-area">
-    <form #a = 'ngForm' (submit)="onSubmit(a)">
-      <div class="form-group mt-3">
-        <label>Full Name</label>
-        <input type="text"
-        placeholder="First Name"
-        class="form-control"
-        name="fullName"
-        ngModel
-        #fullName='ngModel'
-        (change)="getValue(fullName)"
-        required
-        [ngClass]="{'is-invalid': fullName.touched &&fullName.invalid}"
-        minlength="6"
-        maxlength="15"
-        >
+<div class="container mt-2">
+  <form [formGroup]="form">
+    <div class="form-group mt-2">
+      <label>Username</label>
+      <input type="text" class="form-control" formControlName="username"
+      [ngClass]="{'is-invalid': element.username.touched &&element.username.invalid}"
+      >
+      <div class="alert alert-danger" *ngIf="element.username.touched && element.username.invalid">
+        <div *ngIf="element.username.errors?.['required']">Chưa nhập Username này</div>
+        <div  *ngIf="element.username.errors?.['minlength']">Username cần nhập ít nhất 6 kí tự</div>
+        <div  *ngIf="element.username.errors?.['noSpaceValidations']">Username không được chứa khoảng trắng</div>
       </div>
-      <div *ngIf="fullName.errors?.['required']">
-        <div class="alert alert-danger"*ngIf="fullName.touched &&fullName.invalid">Chưa nhập tên này</div>
+    </div>
+
+    <div class="form-group mt-2">
+      <label>Password</label>
+      <input type="password" class="form-control" formControlName="password"
+      [ngClass]="{'is-invalid': element.password.touched &&element.password.invalid}"
+      >
+      <div class="alert alert-danger" *ngIf="element.password.touched && element.password.invalid">
+        <div *ngIf="element.password.errors?.['required']">Chưa nhập mật khẩu này</div>
+        <div  *ngIf="element.password.errors?.['minlength']">Mật khẩu cần nhập ít nhất 6 kí tự</div>
+        <div  *ngIf="element.password.errors?.['upperFirstValidations']">Chữ đầu tiên phải là chữ hoa</div>
+        <div  *ngIf="element.password.errors?.['difficultPwValidations']">Mật khẩu phải bao gồm cả số, chữ thường và hoa</div>
+
       </div>
-      <div *ngIf="fullName.errors?.['minlength']">
-        <div class="alert alert-danger"*ngIf="fullName.touched &&fullName.invalid">Tên cần nhập ít nhất 6 kí tự</div>
-      </div>
+    </div>
 
-      <div class="form-group mt-3">
-        <label>Email</label>
-        <input type="email"
-        placeholder="Email"
-        class="form-control"
-        name="email"
-        ngModel
-        #email="ngModel"
-        pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
-        required
-        [ngClass]="{'is-invalid': email.touched &&email.invalid}"
-        >
-      </div>
-      <div *ngIf="email.errors?.['required']">
-        <div class="alert alert-danger"*ngIf="email.touched &&email.invalid">Chưa nhập email này</div>
-      </div>
-      <div *ngIf="email.errors?.['pattern']">
-        <div class="alert alert-danger"*ngIf="email.touched &&email.invalid">Email sai định dạng</div>
-      </div>
+    <button type="submit" class="btn btn-primary mt-2" [disabled]="form.invalid" (click)="hacker()">Submit</button>
 
-      <div class="form-group mt-3">
-        <label>Address</label>
-        <textarea
-        cols="30"
-        rows="10"
-        placeholder="Address"
-        class="form-control"
-        name="address"
-        ngModel
-        #address = 'ngModel'
-        required
-        [ngClass]="{'is-invalid': address.touched &&address.invalid}"
-
-        >
-        </textarea>
-        <div *ngIf="address.errors?.['required']">
-          <div class="alert alert-danger"*ngIf="address.touched &&address.invalid">Chưa nhập địa chỉ này</div>
-        </div>
-      </div>
-
-
-      <button type="submit" class="btn btn-primary mt-3" [disabled]="a.invalid">Submit</button>
-    </form>
-
-  <h1 class="text-center mt-3">Reactive Form</h1>
-
-
-    <form [formGroup]="form" (Submit)="Submit()">
-      <div class="form-group mt-3">
-        <label>Full Name</label>
-        <input type="text"
-        placeholder="First Name"
-        class="form-control"
-        name="fullName"
-        formControlName="fullName"
-        [ngClass]="{'is-invalid': fullname.touched &&fullname.invalid}"
-        >
-        <div class="alert alert-danger" *ngIf="fullname.touched &&fullname.invalid">
-          <div *ngIf="fullname.errors?.['required']">Chưa nhập tên này</div>
-          <div  *ngIf="fullname.errors?.['minlength']">Tên cần nhập ít nhất 6 kí tự</div>
-        </div>
-      </div>
-
-
-
-      <div class="form-group mt-3">
-        <label>Email</label>
-        <input
-        type="email"
-        placeholder="Email"
-        class="form-control"
-        name="email"
-        formControlName="email"
-        [ngClass]="{'is-invalid' : Email.touched && Email.invalid }"
-        >
-        <div class="alert alert-danger" *ngIf="Email.touched && Email.invalid">
-          <div *ngIf="Email.errors?.['required']">Chưa nhập email này</div>
-          <div  *ngIf="Email.errors?.['email']">Email sai định dạng</div>
-        </div>
-      </div>
-
-
-<!-- Contact Details nested Form Group  -->
-      <div formGroupName="contactDetails">
-        <div class="form-group">
-          <label>Address</label>
-          <textarea
-          cols="30" rows="10" placeholder="Address"
-          class="form-control"
-          name="address"
-          formControlName="address"
-          [ngClass]="{'is-invalid' : Address.touched && Address.invalid }"></textarea>
-        <div class="alert alert-danger" *ngIf="Address.touched && Address.invalid">
-          <div *ngIf="Address.errors?.['required']">Chưa nhập địa chỉ ship hàng này</div>
-        </div>
-        </div>
-
-        <div class="form-group mt-3">
-          <label>Shipping Address</label>
-          <textarea
-          cols="30" rows="10" placeholder="Shipping Address"
-          class="form-control"
-          name="address"
-          formControlName="shippingAddress"
-          [ngClass]="{'is-invalid' : ShippingAddress.touched && ShippingAddress.invalid }"></textarea>
-          <div class="alert alert-danger" *ngIf="ShippingAddress.touched && ShippingAddress.invalid">
-            <div *ngIf="ShippingAddress.errors?.['required']">Chưa nhập địa chỉ này</div>
-          </div>
-        </div>
-        <div class="form-group mt-3">
-
-          <label>Contact Number</label>
-          <input
-          type="text" placeholder="Contact Number"
-          class="form-control"
-          name="email"
-          formControlName="contactNo"
-          [ngClass]="{'is-invalid': Contact.touched &&Contact.invalid}"
-          >
-          <div class="alert alert-danger" *ngIf="Contact.touched && Contact.invalid">
-            <div *ngIf="Contact.errors?.['required']">Chưa nhập SĐT này</div>
-            <div  *ngIf="Contact.errors?.['pattern']">SĐT sai định dạng</div>
-          </div>
-        </div>
-
-        <div class="form-group mt-3">
-          <label>Skills</label>
-          <input type="text" class="form-control" #skill (keyup.enter)="addSkills(skill)">
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let skill of Skills.controls, let i = index">
-              {{skill.value}}
-              <a class="btn btn-sm btn-danger" (click)="removeSkills(i)">X</a>
-          </li>
-        </ul>
-      </div>
-      <button type="submit" class="btn btn-primary mt-3" [disabled]="form.invalid">Submit</button>
-    </form>
-  </div>
+  </form>
 </div>
